@@ -1,54 +1,152 @@
-WebTechsys - Dashboard de Gestão de Pedidos (v2026)
-Este projeto é um ecossistema moderno para gestão de pedidos, utilizando Angular 19 no frontend e .NET 8/9 no backend com persistência em MongoDB.
+TechsysLog - Sistema de Gestão Logística
 
-Sobre o Projeto
-O sistema oferece uma interface de alta performance para monitoramento de logística, apresentando:
+Este projeto é um ecossistema moderno para gestão de pedidos, utilizando Angular 19 no frontend e .NET 8 no backend com persistência em MongoDB. O sistema oferece uma interface de alta performance para monitoramento de logística com gráficos em tempo real e gestão dinâmica de dados.
 
-Gráfico de Distribuição: Visualização em tempo real do status dos pedidos via Chart.js.
 
-Gestão de Dados: Tabela dinâmica com suporte a grandes volumes de pedidos.
 
-Detalhes Avançados: Painel inferior com tipografia otimizada para leitura técnica de SKUs.
+Arquitetura e Tecnologias
 
-Organização e Arquitetura
+Backend (.NET 8)
+
+Clean Architecture: Desacoplamento total entre lógica de negócio e infraestrutura.
+
+
+
+CQRS: Separação clara entre comandos de escrita e consultas de leitura.
+
+
+
+MongoDB Driver: Comunicação otimizada com banco NoSQL.
+
+
+
+Global Exception Handling: Respostas JSON padronizadas via ApiExceptionFilter.
+
+
+
 Frontend (Angular 19)
-Standalone Architecture: Utilização de componentes independentes, eliminando a necessidade de AppModule.
 
-Sinalização de Estado (Signals): Gerenciamento de estado reativo para atualizações instantâneas no painel de detalhes.
+Standalone Components: Arquitetura moderna sem AppModule, aumentando a modularidade.
 
-Layout Flexível: Uso de calc(100% - 400px) para garantir que o painel de detalhes ocupe toda a largura útil da tela.
 
-Backend (.NET)
-REST API: Endpoints otimizados para entrega de JSON compatível com o MongoDB.
 
-CORS Policy: Configurado para aceitar requisições de http://localhost:4200.
+Signals: Gerenciamento de estado reativo para atualizações instantâneas na interface.
 
-Bibliotecas Instaladas
-Frontend (Angular 19)
-@angular/core, @angular/common: Núcleo do framework v19.
 
-ng2-charts & chart.js: Para renderização dos gráficos de pizza/donuts.
 
-rxjs: Gerenciamento de chamadas assíncronas à API.
+Chart.js: Renderização dinâmica de gráficos de distribuição de pedidos.
 
-Backend & Banco de Dados
-MongoDB.Driver: Driver oficial para comunicação com o NoSQL.
 
-ASP.NET Core Runtime: Hosting da API na porta 7223.
 
-Como Rodar o Projeto
-MongoDB: Deve estar ativo em localhost:27017.
+Layout Flexível: Design responsivo utilizando CSS Grid e Flexbox.
 
-API (.NET):
+
+
+Como Executar com Docker (Recomendado)
+
+O Docker garante que o projeto rode perfeitamente em qualquer máquina, orquestrando o Nginx, a API e o MongoDB de forma automática.
+
+
+
+Passo a Passo
+
+Gere o Build do Angular: Na pasta WebTechsys, instale as bibliotecas e gere os arquivos de produção:
+
+
 
 Bash
 
-dotnet run
-# Endpoint: https://localhost:7223/api
-Frontend (Angular 19):
 
-Bash
 
 npm install
+
+ng build
+
+Suba os Containers: Na raiz do projeto (onde está o docker-compose.yml), execute:
+
+
+
+Bash
+
+
+
+docker-compose up -d --build
+
+Endereços de Acesso:
+
+
+
+Dashboard (Frontend): http://localhost:4200
+
+
+
+Swagger (API Documentation): http://localhost:7223/swagger/index.html
+
+
+
+MongoDB: mongodb://localhost:27017
+
+
+
+Configuração Manual (Sem Docker)
+
+MongoDB: Certifique-se de que o banco está rodando em localhost:27017.
+
+
+
+API: No arquivo appsettings.json, ajuste a conexão:
+
+
+
+JSON
+
+
+
+"MongoDbSettings": {
+
+&nbsp; "ConnectionString": "mongodb://localhost:27017/",
+
+&nbsp; "DatabaseName": "TechsysLogDB"
+
+}
+
+Comandos:
+
+
+
+Bash
+
+
+
+\# Na pasta da API
+
+dotnet run
+
+
+
+\# Na pasta do Frontend
+
 ng serve
-# Acesse: http://localhost:4200
+
+Resolução de Problemas (Troubleshooting)
+
+Erro 403 Forbidden: Ocorre se você tentar rodar o Docker sem antes ter executado o ng build no Angular.
+
+
+
+Connection Refused (API): Verifique nos logs se a API conseguiu encontrar o serviço do banco:
+
+
+
+Bash
+
+
+
+docker logs api-techsys-container
+
+CORS: A API está configurada para aceitar requisições de http://localhost:4200.
+
+
+
+
+
