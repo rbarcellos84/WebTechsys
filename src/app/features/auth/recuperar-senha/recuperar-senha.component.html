@@ -1,0 +1,30 @@
+<div class="auth-container">
+  <div class="auth-form">
+    <h2>Recuperar Senha</h2>
+
+    <p class="instrucao">
+      Informe o e-mail cadastrado para receber sua nova senha.
+    </p>
+
+    @if (exibirMensagem) {
+    <div class="senha-display">
+      <span>Sua nova senha é:</span>
+      <strong>{{ novaSenhaGerada }}</strong>
+    </div>
+    }
+
+    <form (submit)="solicitarSenha()">
+      <div class="form-group">
+        <input type="email" [(ngModel)]="emailInput" name="email" placeholder="E-mail" required>
+      </div>
+
+      <button type="submit" class="btn-primary">
+        Gerar Nova Senha
+      </button>
+    </form>
+
+    <div class="login-footer-centralizado">
+      <a routerLink="/login" class="link-secundario">Lembrei a senha</a>
+    </div>
+  </div>
+</div>

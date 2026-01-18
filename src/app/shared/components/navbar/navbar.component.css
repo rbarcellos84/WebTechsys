@@ -1,0 +1,45 @@
+.navbar-container {
+  background-color: #e9e9e9;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  border-bottom: 1px solid #ccc;
+}
+
+.nav-menu {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.group-left, .group-right {
+  display: flex;
+  align-items: center;
+}
+
+.nav-menu li a, .user-email {
+  padding: 0 15px;
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+}
+
+.nav-menu li a:hover {
+  color: #007bff;
+}
+
+.user-email {
+  color: #666;
+  font-weight: bold;
+  border-right: 1px solid #bbb;
+}
+
+.logout-link {
+  cursor: pointer;
+  font-weight: 500;
+}

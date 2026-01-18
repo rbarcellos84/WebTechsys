@@ -1,0 +1,22 @@
+<div class="login-container">
+  <div class="login-card">
+    <h2>Acesso ao WebTechSys</h2>
+
+    <form (submit)="efetuarLogin()">
+      <div class="form-group">
+        <input type="email" [(ngModel)]="dados.email" placeholder="E-mail" name="email" required>
+      </div>
+
+      <div class="form-group">
+        <input type="password" [(ngModel)]="dados.senha" placeholder="Senha" name="senha" required>
+      </div>
+
+      <button type="submit" class="btn-primary">Entrar</button>
+    </form>
+
+    <div class="login-footer">
+      <a routerLink="/recuperar-senha" class="link-secundario">Esqueci a senha</a>
+      <a routerLink="/cadastro" class="link-secundario">Cadastrar acesso</a>
+    </div>
+  </div>
+</div>

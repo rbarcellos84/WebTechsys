@@ -1,0 +1,23 @@
+<div class="auth-container">
+  <form (submit)="registrar()" class="auth-form">
+    <h2>Criar Conta</h2>
+
+    <div class="form-group">
+      <input type="text" [(ngModel)]="novoUsuario.nome" name="nome" placeholder="Nome Completo" required>
+    </div>
+
+    <div class="form-group">
+      <input type="email" [(ngModel)]="novoUsuario.email" name="email" placeholder="E-mail" required>
+    </div>
+
+    <div class="form-group">
+      <input type="password" [(ngModel)]="novoUsuario.senha" name="senha" placeholder="Senha" required>
+    </div>
+
+    <button type="submit" class="btn-primary">Cadastrar</button>
+
+    <div class="auth-footer">
+      <a routerLink="/login">Já tem uma conta? Entre aqui</a>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,81 @@
+<div class="container-central">
+    <div class="card-pedido">
+        <h2>ATUALIZAR STATUS DO PEDIDO</h2>
+        <hr>
+
+        <form [formGroup]="pedidoForm">
+            <div class="form-group">
+                <label>Número do Pedido (Consulta):</label>
+                <div class="row-flex">
+                    <input type="text" formControlName="numeroPedido" class="flex-2">
+                    <button type="button" class="btn-add flex-1" (click)="buscarPedido()">Consultar</button>
+                </div>
+            </div>
+
+            <div class="row-flex">
+                <div class="form-group flex-1">
+                    <label>Alterar Estado para:</label>
+                    <select formControlName="novoStatus" class="select-estilo">
+                        <option *ngFor="let s of listaStatus" [value]="s.id">{{ s.nome }}</option>
+                    </select>
+                </div>
+                <div class="form-group flex-1">
+                    <label>Valor Total (R$):</label>
+                    <input type="text" formControlName="valorTotal">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>E-mail do Cliente:</label>
+                <input type="text" formControlName="usuarioEmail">
+            </div>
+
+            <div class="form-group">
+                <label>Itens do Pedido:</label>
+                <textarea formControlName="itensExibicao" rows="2"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Descrição Adicional:</label>
+                <textarea formControlName="descricao" rows="2"></textarea>
+            </div>
+
+            <div class="section-box" formGroupName="enderecoEntrega">
+                <h3 style="font-size: 14px; margin-bottom: 10px; color: #3498db;">ENDEREÇO DE ENTREGA</h3>
+                <div class="row-flex">
+                    <div class="form-group flex-1"><label>CEP:</label><input type="text" formControlName="cep"></div>
+                    <div class="form-group flex-2"><label>Rua:</label><input type="text" formControlName="rua"></div>
+                    <div class="form-group flex-small"><label>Nº:</label><input type="text" formControlName="numero">
+                    </div>
+                </div>
+                <div class="row-flex">
+                    <div class="form-group flex-1"><label>Bairro:</label><input type="text" formControlName="bairro">
+                    </div>
+                    <div class="form-group flex-1"><label>Cidade:</label><input type="text" formControlName="cidade">
+                    </div>
+                    <div class="form-group flex-small"><label>UF:</label><input type="text" formControlName="estado">
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-row">
+                <button type="button" class="btn-login-style" (click)="limparTela()">Limpar</button>
+
+                <button type="button" class="btn-login-style" (click)="confirmarCancelamento()"
+                    [disabled]="!pedidoEncontrado || isEstadoFinal">
+                    Cancelar Pedido
+                </button>
+
+                <button type="button" class="btn-login-style" (click)="avancarEstado()"
+                    [disabled]="!pedidoEncontrado || isEstadoFinal">
+                    Avançar Estado
+                </button>
+
+                <button type="button" class="btn-login-style" (click)="salvarStatusManual()"
+                    [disabled]="!pedidoEncontrado || isEstadoFinal">
+                    Atualizar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

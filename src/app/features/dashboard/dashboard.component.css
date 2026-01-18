@@ -1,0 +1,367 @@
+/* container Principal */
+.dashboard-container {
+  padding: 20px;
+  background-color: #f5f8fa;
+  min-height: 100vh;
+}
+
+/* linha Superior */
+.dashboard-top-row {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+/* card Estilizado */
+.card-tech {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  background: white;
+}
+
+/* a borda que você pediu (igual da imagem/modal anterior) */
+.border-highlight {
+  border: 2px solid #3498db;
+}
+
+/* gráfico */
+.chart-box {
+  flex: 0 0 380px;
+  height: 620px;
+  display: flex;
+  flex-direction: column;
+}
+
+.frame-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: #2c3e50;
+  text-align: center;
+  margin: 15px 0;
+  text-transform: uppercase;
+}
+
+.canvas-wrapper {
+  padding: 0 20px;
+  margin-bottom: 20px;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* grid de pedidos */
+.grid-box {
+  flex: 1;
+  height: 620px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.table-responsive {
+  flex-grow: 1;
+  overflow-y: hidden;
+}
+
+/* tabela customizada */
+.table-custom {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.table-custom th {
+  position: sticky;
+  top: 0;
+  background: #f8f9fa;
+  padding: 12px 15px;
+  font-size: 11px;
+  color: #2c3e50;
+  border-bottom: 2px solid #dee2e6;
+  z-index: 10;
+}
+
+.table-custom td {
+  padding: 0 15px;
+  border-bottom: 1px solid #f8f9fa;
+  font-size: 13px;
+  height: 45px;
+  transition: background 0.2s;
+}
+
+.table-custom tr:hover td {
+  background-color: #f1f8ff;
+}
+
+/* auxiliares de texto */
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* legendas */
+.legend-area-reorganized {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  padding: 10px 25px 25px 25px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.legend-column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 125px;
+}
+
+.legend-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 22px;
+}
+
+.legend-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+}
+
+.status-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #7f8c8d;
+}
+
+.status-count {
+  font-size: 10px;
+  font-weight: 700;
+  color: #333;
+}
+
+.total-item-row {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.total-dot-black {
+  background-color: #000;
+}
+
+.total-text-bold,
+.total-count-bold {
+  color: #000;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+/* paginação */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 15px;
+  background: #fcfcfc;
+  border-top: 1px solid #eee;
+}
+
+.btn-pag {
+  padding: 6px 15px;
+  border-radius: 4px;
+  border: 1px solid #d1d9e6;
+  background: white;
+  font-size: 12px;
+  font-weight: 600;
+  color: #3498db;
+  cursor: pointer;
+}
+
+.btn-pag:disabled {
+  color: #ccc;
+  border-color: #eee;
+  cursor: not-allowed;
+}
+
+.pag-info {
+  font-size: 12px;
+  font-weight: 700;
+  color: #7f8c8d;
+}
+
+/* status badges */
+.badge-status {
+  padding: 4px 10px;
+  border-radius: 4px;
+  color: white;
+  font-weight: 700;
+  font-size: 9px;
+  min-width: 85px;
+  text-align: center;
+  display: inline-block;
+}
+
+.ingressado {
+  background: #3498db;
+}
+
+.processando {
+  background: #f1c40f;
+  color: #333;
+}
+
+.enviado {
+  background: #1abc9c;
+}
+
+.ausente {
+  background: #e67e22;
+}
+
+.entregue {
+  background: #2ecc71;
+}
+
+.cancelado {
+  background: #ff2f5c;
+}
+
+/* Ícones de leitura */
+.unread-dot-mini {
+  width: 8px;
+  height: 8px;
+  background: #ff2f5c;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.check-mark {
+  color: #2ecc71;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* toast notification */
+.realtime-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  background: #2c3e50;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.toast-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.toast-content button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.detail-panel {
+  margin-top: 20px;
+  margin-left: 400px;
+  width: calc(100% - 400px);
+  height: 150px;
+  padding: 15px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+/* Container do Painel ajustado à tabela da direita */
+.detail-panel {
+  margin-top: 15px;
+  margin-left: 400px;
+  width: calc(100% - 400px);
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  min-height: 185px;
+  box-sizing: border-box;
+}
+
+.detail-header {
+  border-bottom: 1px solid #f0f2f5;
+  padding-bottom: 12px;
+  margin-bottom: 5px;
+}
+
+/* Container das colunas com espaço superior (uma linha para baixo) */
+.detail-columns-row {
+  display: flex !important;
+  flex-direction: row !important;
+  padding-top: 15px;
+  gap: 50px;
+  width: 100%;
+}
+
+.col-detail-item {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Títulos das colunas - Azul técnico e sem negrito */
+.col-title-spacing {
+  margin: 0 0 10px 0;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #3498db;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.text-content {
+  margin: 0;
+  font-size: 12px;
+  color: #2c3e50;
+  line-height: 1.5;
+}
+
+/* Estilo Financeiro */
+.financial-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.label-tiny {
+  font-size: 10px;
+  color: #95a5a6;
+  margin-bottom: 2px;
+}
+
+.value-highlight {
+  font-size: 19px;
+  font-weight: 700;
+  color: #27ae60;
+}
+
+.sku-box {
+  margin-top: 10px;
+  padding-top: 11px;
+  border-top: 1px dotted #eee;
+  font-size: 12px;
+  color: #292929;
+}

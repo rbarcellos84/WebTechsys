@@ -1,0 +1,131 @@
+<div class="dashboard-container">
+  <div class="realtime-toast" *ngIf="mensagemToast">
+    <div class="toast-content">
+      <span class="toast-icon">⚡</span>
+      <p>{{ mensagemToast }}</p>
+      <button (click)="mensagemToast = null">×</button>
+    </div>
+  </div>
+
+  <div class="dashboard-top-row">
+    <div class="card-tech chart-box border-highlight">
+      <h3 class="frame-title">DISTRIBUIÇÃO DE PEDIDOS</h3>
+      <div class="canvas-wrapper">
+        <canvas baseChart [data]="pieChartData()" [type]="'pie'"></canvas>
+      </div>
+      <div class="legend-area-reorganized">
+        <div class="legend-column">
+          <div class="legend-item" *ngFor="let stat of estatisticas().slice(0, 4)">
+            <div class="legend-info">
+              <span class="status-dot" [style.backgroundColor]="stat.cor"></span>
+              <span class="status-label">{{stat.texto}}</span>
+            </div>
+            <span class="status-count">{{stat.total}}</span>
+          </div>
+        </div>
+        <div class="legend-column">
+          <div class="legend-item" *ngFor="let stat of estatisticas().slice(4, 6)">
+            <div class="legend-info">
+              <span class="status-dot" [style.backgroundColor]="stat.cor"></span>
+              <span class="status-label">{{stat.texto}}</span>
+            </div>
+            <span class="status-count">{{stat.total}}</span>
+          </div>
+          <div class="legend-item total-item-row">
+            <div class="legend-info">
+              <span class="status-dot total-dot-black"></span>
+              <span class="status-label total-text-bold">Total</span>
+            </div>
+            <span class="status-count total-count-bold">{{ pedidos().length }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-tech grid-box border-highlight">
+      <div class="table-responsive">
+        <table class="table-custom">
+          <thead>
+            <tr>
+              <th class="text-left">Nº PEDIDO</th>
+              <th class="text-center">STATUS</th>
+              <th class="text-center">DATA ENVIO</th>
+              <th class="text-center">DESCRIÇÃO</th>
+              <th class="text-center">VALOR</th>
+              <th class="text-center">ÚLT. ATUALIZAÇÃO</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let pedido of pedidosPaginados()">
+              <td class="text-left" (click)="abrirDetalhes(pedido, $event)" style="cursor: pointer; color: #3498db;">
+                <strong>{{pedido.numeroPedido}}</strong>
+              </td>
+              <td class="text-center">
+                <span [class]="'badge-status ' + statusMap[pedido.status].classe">
+                  {{statusMap[pedido.status].texto}}
+                </span>
+              </td>
+              <td class="text-center">
+                {{ pedido.dataEnvio | date:'dd/MM/yyyy HH:mm' }}
+              </td>
+              <td class="text-left">
+                {{pedido.descricao}}
+              </td>
+              <td class="text-center">
+                {{ pedido.valorTotal | currency:'BRL':'symbol':'1.2-2' }}
+              </td>
+              <td class="text-center">
+                <span class="update-ts" *ngIf="pedido.dataAtualizacao">
+                  {{ pedido.dataAtualizacao | date:'dd/MM/yyyy HH:mm' }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination-container">
+        <button class="btn-pag" (click)="paginaAnterior()" [disabled]="paginaAtual() === 0">◀ Anterior</button>
+        <span class="pag-info">Página {{ paginaAtual() + 1 }} de {{ totalPaginas() }}</span>
+        <button class="btn-pag" (click)="proximaPagina()" [disabled]="paginaAtual() >= totalPaginas() - 1">Próxima
+          ▶</button>
+      </div>
+    </div>
+  </div>
+  <div class="card-tech detail-panel border-highlight" *ngIf="pedidoSelecionado" (click)="$event.stopPropagation()">
+    <div class="detail-header">
+      <h4 style="font-weight: normal; margin: 0;">Pedido Selecionado: <strong>{{ pedidoSelecionado.numeroPedido
+          }}</strong> &nbsp; &nbsp; &nbsp; &nbsp; Data do Ingresso: <strong>{{ pedidoSelecionado.dataCriacao |
+          date:'dd/MM/yyyy HH:mm' }}</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span [class]="'badge-status ' + statusMap[pedidoSelecionado.status].classe">
+          {{statusMap[pedidoSelecionado.status].texto}}
+        </span>
+      </h4>
+    </div>
+
+    <div class="detail-columns-row">
+      <div class="col-detail-item" *ngIf="pedidoSelecionado.enderecoEntrega">
+        <h5 class="col-title-spacing">Endereço de Entrega</h5>
+        <p class="text-content">
+          {{ pedidoSelecionado.enderecoEntrega.rua }}, {{ pedidoSelecionado.enderecoEntrega.numero }}<br>
+          {{ pedidoSelecionado.enderecoEntrega.bairro }}<br>
+          {{ pedidoSelecionado.enderecoEntrega.cidade }}/{{ pedidoSelecionado.enderecoEntrega.estado }}
+        </p>
+      </div>
+      <div class="col-detail-item">
+        <h5 class="col-title-spacing">Resumo Financeiro</h5>
+        <div class="financial-box">
+          <span class="label-tiny">Valor Total do Pedido</span>
+          <span class="value-highlight">{{ pedidoSelecionado.valorTotal | currency:'BRL':'symbol':'1.2-2' }}</span>
+        </div>
+      </div>
+
+      <div class="col-detail-item">
+        <h5 class="col-title-spacing">Detalhes do Pedido</h5>
+        <p class="text-content">{{ pedidoSelecionado.descricao || 'Nenhuma descrição disponível.' }}</p>
+        <div class="sku-box" *ngIf="pedidoSelecionado.itens?.length > 0">
+          <small>SKUs: {{ pedidoSelecionado.itens.join(', ') }}</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,110 @@
+.container-central {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 90vh;
+    background-color: #f8f9fa;
+    padding: 20px;
+}
+
+.card-pedido {
+    background: white;
+    border: 2px solid #3498db;
+    border-radius: 12px;
+    padding: 30px;
+    width: 100%;
+    max-width: 800px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.section-box {
+    border: 1px solid #eee;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    background: #fafafa;
+}
+
+.row-flex {
+    display: flex;
+    gap: 15px;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+.flex-2 {
+    flex: 2;
+}
+
+.flex-small {
+    flex: 0.5;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+input,
+textarea,
+select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 5px;
+}
+
+input:disabled,
+textarea:disabled {
+    background: #e9ecef;
+    color: #495057;
+    cursor: not-allowed;
+}
+
+.btn-add {
+    background: #f8f9fa;
+    border: 1px solid #3498db;
+    padding: 5px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #3498db;
+    font-weight: bold;
+}
+
+.button-row {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.btn-login-style {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #007bff;
+    cursor: pointer;
+}
+
+.btn-login-style:disabled {
+    background-color: #e9ecef;
+    color: #adb5bd;
+}
+
+h2 {
+    color: #333;
+    margin: 0;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 20px 0;
+}

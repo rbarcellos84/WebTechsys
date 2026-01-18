@@ -1,0 +1,74 @@
+<div class="container-central">
+  <div class="card-pedido">
+    <h2>CADASTRO DE PEDIDO</h2>
+    <hr>
+
+    <form [formGroup]="pedidoForm" (ngSubmit)="salvarPedido()">
+      <div class="form-group">
+        <label>Usuário Logado:</label>
+        <input type="text" [value]="emailUsuarioLogado" disabled class="input-readonly">
+      </div>
+
+      <div class="row-flex">
+        <div class="form-group flex-1">
+          <label>Número do Pedido: <span class="required-mark">*</span></label>
+          <input type="text" formControlName="numeroPedido">
+        </div>
+
+        <div class="form-group flex-1">
+          <label>Valor Total (R$): <span class="required-mark">*</span></label>
+          <input type="text" formControlName="valorTotal" placeholder="0.00">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Descrição: <span class="required-mark">*</span></label>
+        <textarea formControlName="descricao" rows="2" placeholder="Detalhes do pedido..."></textarea>
+      </div>
+
+      <div class="section-box">
+        <label>Itens do Pedido ({{itens.length}}/15):</label>
+        <div formArrayName="itens" class="itens-grid">
+          <div *ngFor="let item of itens.controls; let i=index" class="item-row">
+            <input [formControlName]="i" placeholder="Nome do produto">
+            <button type="button" (click)="removerItem(i)" class="btn-remove" *ngIf="itens.length > 1">✕</button>
+          </div>
+        </div>
+        <button type="button" (click)="adicionarItem()" class="btn-add" [disabled]="itens.length >= 15">
+          + Adicionar Item
+        </button>
+      </div>
+
+      <div class="section-box" formGroupName="enderecoEntrega">
+        <div class="row-flex">
+          <div class="form-group flex-1">
+            <label>CEP: <span class="required-mark">*</span></label>
+            <input type="text" formControlName="cep" (blur)="consultarCep()" maxlength="8" placeholder="Apenas números">
+          </div>
+          <div class="form-group flex-2">
+            <label>Rua:</label>
+            <input type="text" formControlName="rua" class="input-readonly">
+          </div>
+          <div class="form-group flex-small">
+            <label>Nº: <span class="required-mark">*</span></label>
+            <input type="text" formControlName="numero">
+          </div>
+        </div>
+
+        <div class="row-flex">
+          <div class="form-group flex-1"><label>Bairro:</label><input type="text" formControlName="bairro"
+              class="input-readonly"></div>
+          <div class="form-group flex-1"><label>Cidade:</label><input type="text" formControlName="cidade"
+              class="input-readonly"></div>
+          <div class="form-group flex-small"><label>UF:</label><input type="text" formControlName="estado"
+              class="input-readonly"></div>
+        </div>
+      </div>
+
+      <div class="button-row">
+        <button type="button" class="btn-login-style" (click)="limparTela()">Cancelar</button>
+        <button type="submit" class="btn-login-style" [disabled]="pedidoForm.invalid">Registrar</button>
+      </div>
+    </form>
+  </div>
+</div>

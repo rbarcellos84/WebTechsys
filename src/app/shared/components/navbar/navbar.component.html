@@ -1,0 +1,16 @@
+<nav class="navbar-container">
+  <ul class="nav-menu">
+    <div class="group-left">
+      <li><a routerLink="/dashboard" routerLinkActive="active">Dashboard</a></li>
+      <li><a routerLink="/novo-pedido">Cadastrar pedido</a></li>
+      <li><a routerLink="/atualizar-status">Atualizar status</a></li>
+    </div>
+
+    <div class="group-right">
+      @if (authService.usuarioLogado()) {
+        <li class="user-email">{{ authService.usuarioLogado() }}</li>
+        <li><a (click)="authService.logout()" class="logout-link">Logout</a></li>
+      }
+    </div>
+  </ul>
+</nav>
