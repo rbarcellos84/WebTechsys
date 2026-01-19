@@ -123,7 +123,7 @@
         <h5 class="col-title-spacing">Detalhes do Pedido</h5>
         <p class="text-content">{{ pedidoSelecionado.descricao || 'Nenhuma descrição disponível.' }}</p>
         <div class="sku-box" *ngIf="pedidoSelecionado.itens?.length > 0">
-          <small>SKUs: {{ pedidoSelecionado.itens.join(', ') }}</small>
+          <small>Itens: {{ pedidoSelecionado.itens.join(', ') }}</small>
         </div>
       </div>
     </div>
