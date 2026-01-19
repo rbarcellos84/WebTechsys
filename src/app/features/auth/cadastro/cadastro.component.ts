@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-cadastro',
@@ -14,8 +15,8 @@ import { firstValueFrom } from 'rxjs';
 export class CadastroComponent {
   private http = inject(HttpClient);
   private router = inject(Router);
+  private readonly API_BASE = environment.apiURL;
 
-  // Objeto seguindo o Schema do seu Swagger
   novoUsuario = {
     nome: '',
     email: '',
@@ -24,14 +25,14 @@ export class CadastroComponent {
 
   async registrar() {
     try {
-      const url = 'https://localhost:7223/api/Login/cadastrar';
-      // Chamada para a sua API C# que retorna "Usuário cadastrado com sucesso"
+      const url = `${this.API_BASE}/api/Login/cadastrar`;
       await firstValueFrom(this.http.post(url, this.novoUsuario));
 
       alert('Usuário cadastrado com sucesso!');
       this.router.navigate(['/login']);
     } catch (error) {
-      alert('Erro ao cadastrar usuário. Verifique se o e-mail já existe.');
+      console.error('Erro no cadastro de usuário:', error);
+      alert('Erro ao cadastrar usuário. Verifique se o servidor na porta 7223 está ativo.');
     }
   }
 }

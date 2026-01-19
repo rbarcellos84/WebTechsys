@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-atualizar-status',
@@ -13,6 +14,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class AtualizarStatusComponent implements OnInit {
   private fb = inject(FormBuilder);
   private http = inject(HttpClient);
+  private readonly API_BASE = environment.apiURL;
 
   pedidoForm!: FormGroup;
   statusAtual: number = 0;
@@ -61,7 +63,7 @@ export class AtualizarStatusComponent implements OnInit {
     const token = sessionStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-    this.http.get<any>(`https://localhost:7223/api/Pedidos/obter-por-numero/${num}`, { headers }).subscribe({
+    this.http.get<any>(`${this.API_BASE}/api/Pedidos/obter-por-numero/${num}`, { headers }).subscribe({
       next: (pedido) => {
         this.statusAtual = pedido.status;
         this.pedidoEncontrado = true;
@@ -96,7 +98,7 @@ export class AtualizarStatusComponent implements OnInit {
     const token = sessionStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-    this.http.get<any>(`https://localhost:7223/api/Usuario/obter-email/${userId}`, { headers }).subscribe({
+    this.http.get<any>(`${this.API_BASE}/api/Usuario/obter-email/${userId}`, { headers }).subscribe({
       next: (res) => this.pedidoForm.patchValue({ usuarioEmail: res.usuarioEmail }),
       error: () => { }
     });
@@ -125,7 +127,7 @@ export class AtualizarStatusComponent implements OnInit {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     const payload = { numeroPedido: num.toString(), novoStatus: status };
 
-    this.http.put('https://localhost:7223/api/Pedidos/atualizar-status', payload, { headers }).subscribe({
+    this.http.put(`${this.API_BASE}/api/Pedidos/atualizar-status`, payload, { headers }).subscribe({
       next: () => {
         alert('Status atualizado!');
         this.buscarPedido();

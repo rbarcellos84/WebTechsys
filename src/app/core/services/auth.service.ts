@@ -1,6 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -9,14 +10,14 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
 
-  private readonly API_BASE = 'https://localhost:7223/api';
+  private readonly API_BASE = environment.apiURL;
 
   usuarioLogado = signal<string | null>(sessionStorage.getItem('user_email'));
 
   constructor() { }
 
   login(credenciais: any) {
-    return this.http.post<any>(`${this.API_BASE}/Login/login`, credenciais);
+    return this.http.post<any>(`${this.API_BASE}/api/Login/login`, credenciais);
   }
 
   recuperarSenha(email: string) {

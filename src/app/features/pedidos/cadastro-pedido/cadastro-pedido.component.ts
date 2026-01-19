@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } fr
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { environment } from '../../../../environments/environment';
+import { SignalrService } from '../../../services/signalr.service';
 
 @Component({
   selector: 'app-cadastro-pedido',
@@ -13,6 +15,8 @@ import { AuthService } from '../../../core/services/auth.service';
   styleUrls: ['./cadastro-pedido.component.css']
 })
 export class CadastroPedidoComponent implements OnInit {
+  private readonly API_BASE = environment.apiURL;
+
   pedidoForm!: FormGroup;
   loadingCep = false;
   usuarioId: string = '';
@@ -22,7 +26,8 @@ export class CadastroPedidoComponent implements OnInit {
     private fb: FormBuilder,
     private http: HttpClient,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private signalrService: SignalrService
   ) { }
 
   ngOnInit() {
@@ -54,7 +59,7 @@ export class CadastroPedidoComponent implements OnInit {
 
     if (email) {
       this.emailUsuarioLogado = email;
-      this.http.get<any>(`https://localhost:7223/api/Usuario/obter-id/${email}`, { headers })
+      this.http.get<any>(`${this.API_BASE}/api/Usuario/obter-id/${email}`, { headers })
         .subscribe({
           next: (res) => {
             this.usuarioId = res.usuarioId;
@@ -132,13 +137,17 @@ export class CadastroPedidoComponent implements OnInit {
       }
     };
 
-    this.http.post('https://localhost:7223/api/Pedidos/registrar', pedidoParaEnviar, { headers }).subscribe({
+    this.http.post(`${this.API_BASE}/api/Pedidos/registrar`, pedidoParaEnviar, { headers }).subscribe({
       next: (res: any) => {
         alert(res.mensagem || 'Pedido registrado com sucesso!');
+        
+        // NOTIFICA O DASHBOARD VIA SIGNALR
+        this.signalrService.enviarAtualizacao(); 
+        
         this.limparTela();
       },
       error: (err) => {
-        alert('Erro ao registrar o pedido. Verifique os dados e tente novamente.');
+        alert('Erro ao registrar o pedido. Verifique os dados e a conexão com a API na porta 7223.');
       }
     });
   }

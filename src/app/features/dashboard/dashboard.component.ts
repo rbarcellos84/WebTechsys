@@ -5,6 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BaseChartDirective } from 'ng2-charts';
 import { SignalrService } from '../../services/signalr.service';
 import { Subscription } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,7 +19,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private signalrService = inject(SignalrService);
   private subs = new Subscription();
   private eRef = inject(ElementRef);
+  
+  private readonly API_BASE = environment.apiURL;
 
+  // ESTADO DOS DADOS (Signals)
   public pedidos = signal<any[]>([]);
   public loading: boolean = false;
   public pedidoSelecionado: any = null;
@@ -27,9 +31,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   public novoStatusSelecionado: number = 1;
   public mensagemToast: string | null = null;
 
+  // PAGINAÇÃO (Signals)
   public paginaAtual = signal<number>(0);
   public itensPorPagina = 11;
 
+  // REGRAS DE NEGÓCIO: MAPEAMENTO DE STATUS
   public statusMap: any = {
     1: { texto: 'Ingressado', classe: 'ingressado', cor: '#36A2EB' },
     2: { texto: 'Processando', classe: 'processando', cor: '#FFCE56' },
@@ -39,7 +45,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     6: { texto: 'Cancelado', classe: 'cancelado', cor: '#ff2f5c' }
   };
 
-  // Signal computado para a tabela paginada
+  // LÓGICA REATIVA: TABELA PAGINADA
   public pedidosPaginados = computed(() => {
     const inicio = this.paginaAtual() * this.itensPorPagina;
     const fim = inicio + this.itensPorPagina;
@@ -48,17 +54,40 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   public totalPaginas = computed(() => Math.ceil(this.pedidos().length / this.itensPorPagina));
 
+  // LÓGICA REATIVA: CARDS DE ESTATÍSTICAS
+  public estatisticas = computed(() => {
+    const dados = this.pedidos();
+    return [1, 2, 3, 4, 5, 6].map(id => ({
+      ...this.statusMap[id],
+      total: dados.filter(p => p.status === id).length
+    }));
+  });
+
+  // LÓGICA REATIVA: DADOS DO GRÁFICO (CHART.JS)
+  public pieChartData = computed(() => {
+    const dados = this.pedidos();
+    return {
+      labels: Object.values(this.statusMap).map((s: any) => s.texto),
+      datasets: [{
+        data: [1, 2, 3, 4, 5, 6].map(s => dados.filter(p => p.status === s).length),
+        backgroundColor: Object.values(this.statusMap).map((s: any) => s.cor)
+      }]
+    };
+  });
+
   ngOnInit() {
+    // 1. Carga inicial
     this.obterTodosOsDados();
 
-    // SignalR: Atualização de lista/gráficos
+    // 2. SIGNALR: Escuta o evento de atualização da API C#
     this.subs.add(
       this.signalrService.atualizarGraficos$.subscribe(() => {
+        console.log('Dashboard: Recebido comando do SignalR para atualizar dados.');
         this.obterTodosOsDados();
       })
     );
 
-    // SignalR: Recebimento de alertas de texto
+    // 3. SIGNALR: Escuta novas notificações de texto
     this.subs.add(
       this.signalrService.novaNotificacaoTexto$.subscribe((msg) => {
         this.mostrarNotificacao(msg);
@@ -82,23 +111,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     this.loading = true;
 
-    this.http.get<any[]>('https://localhost:7223/api/Pedidos/obter-todos', { headers }).subscribe({
+    this.http.get<any[]>(`${this.API_BASE}/api/Pedidos/obter-todos`, { headers }).subscribe({
       next: (res) => {
         this.pedidos.set(res);
-
         this.loading = false;
       },
-      error: () => this.loading = false
+      error: (err) => {
+        console.error('Erro ao buscar pedidos no Docker:', err);
+        this.loading = false;
+      }
     });
   }
 
   abrirDetalhes(pedido: any, event: MouseEvent) {
     event.stopPropagation();
     this.pedidoSelecionado = pedido;
-
-    if (!pedido.lida) {
-      this.marcarComoLido(pedido.numeroPedido);
-    }
   }
 
   fecharPainel() { this.pedidoSelecionado = null; }
@@ -106,30 +133,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   @HostListener('document:click', ['$event'])
   clickout(event: MouseEvent) {
     if (!this.pedidoSelecionado) return;
-
     const target = event.target as HTMLElement;
-
-    const clicouNoCard = target.closest('.card-tech');
-    const clicouNoLinkPedido = target.closest('strong');
-
-    if (!clicouNoCard && !clicouNoLinkPedido) {
+    if (!target.closest('.card-tech') && !target.closest('strong')) {
       this.fecharPainel();
     }
-  }
-
-  private marcarComoLido(numeroPedido: string) {
-    const token = sessionStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
-    this.http.put(`https://localhost:7223/api/Pedidos/marcar-como-lido/${numeroPedido}`, {}, { headers })
-      .subscribe({
-        next: () => {
-          const novaLista = this.pedidos().map(p =>
-            p.numeroPedido === numeroPedido ? { ...p, lida: true } : p
-          );
-          this.pedidos.set(novaLista);
-        }
-      });
   }
 
   proximaPagina() {
@@ -144,38 +151,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
-  public estatisticas = computed(() => {
-    const dados = this.pedidos();
-    return [1, 2, 3, 4, 5, 6].map(id => ({
-      ...this.statusMap[id],
-      total: dados.filter(p => p.status === id).length
-    }));
-  });
-
-  public pieChartData = computed(() => {
-    const dados = this.pedidos();
-    return {
-      labels: Object.values(this.statusMap).map((s: any) => s.texto),
-      datasets: [{
-        data: [1, 2, 3, 4, 5, 6].map(s => dados.filter(p => p.status === s).length),
-        backgroundColor: Object.values(this.statusMap).map((s: any) => s.cor)
-      }]
-    };
-  });
-
   confirmarAvancoManual() {
     if (!this.pedidoParaAlterar) return;
     const token = sessionStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-    this.http.put('https://localhost:7223/api/Pedidos/atualizar-status', {
+    this.http.put(`${this.API_BASE}/api/Pedidos/atualizar-status`, {
       numeroPedido: this.pedidoParaAlterar.numeroPedido,
       novoStatus: Number(this.novoStatusSelecionado)
     }, { headers }).subscribe({
       next: () => {
         this.exibirModalStatus = false;
-        this.obterTodosOsDados();
-      }
+      },
+      error: (err) => console.error('Erro ao atualizar status:', err)
     });
   }
 }
